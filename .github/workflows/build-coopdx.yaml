@@ -67,11 +67,10 @@ jobs:
             ln -sf /usr/local/bin/g++13 /usr/local/bin/g++
           run: |
             echo "开始编译。请坐和放宽"
-            # 使用 c++。应该是什么g++找不到。我试试这个
             gmake EXTERNAL_DATA=1 DISCORDRPC=0 -j$(sysctl -n hw.ncpu)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sm64coopdx-freebsd-binaries
+          name: sm64coopdx_freebsd
           path: build/us_pc/
