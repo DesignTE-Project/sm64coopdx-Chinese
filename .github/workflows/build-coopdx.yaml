@@ -11,6 +11,10 @@ on:
         description: "构建 RISC-V Linux"
         type: boolean
         default: true
+      riscv-gles2:
+        description: "[RISC-V] 是否使用 GLES2 视频后端（建议默认）"
+        type: boolean
+        default: true
       freebsd:
         description: "构建 FreeBSD"
         type: boolean
@@ -50,10 +54,43 @@ jobs:
           name: sm64coopdx_arm64_linux
           path: build/us_pc/
 
+  build-riscv:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.riscv == true }}
+    name: RISC-V Linux 构建
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: set
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: riscv64
+
+      - name: build in docker
+        run: |
+          cat << 'EOF' > build_riscv.sh
+          #!/bin/bash
+          set -e
+          echo "depending..."
+          apt-get update
+          apt-get install -y build-essential libsdl2-dev libglew-dev python3 git pkg-config
+          echo "开始编译 RISCV 虽然但是不知道 RISCV 有多搞？！！"
+          make RENDER_API=gles2 DISCORD_SDK=0 EXTERNAL_DATA=1 -j$(nproc)
+          EOF
+          chmod +x build_riscv.sh
+
+          docker run --rm \
+            --platform linux/riscv64 \
+            -v ${{ github.workspace }}:/workspace \
+            -w /workspace \
+            ubuntu:24.04 \
+            ./build_riscv.sh
+      
   build-freebsd:
     runs-on: ubuntu-22.04
     if: ${{ inputs.freebsd == true }}
-    name: FreeBSD 构建（BSD 大佬我哭了）
+    name: FreeBSD 构建
 
     steps:
       - name: checkout
@@ -66,7 +103,7 @@ jobs:
           sync: rsync # 同步文件
           prepare: |
             pkg update
-            pkg install -y gmake sdl2 glew python3 git pkgconf gcc
+            pkg install -y gmake sdl2 glew python3 git pkgconf gcc libxrandr libxinerama libxi
             ln -sf /usr/local/bin/python3 /usr/local/bin/python
             ln -sf /usr/local/bin/g++14 /usr/local/bin/g++
           run: |
@@ -76,7 +113,7 @@ jobs:
             mv tmp.c src/pc/mumble/mumble.c
             
             echo "开始编译。请坐和放宽"
-            gmake EXTERNAL_DATA=1 DISCORD_SDK=0 -j$(sysctl -n hw.ncpu)
+            gmake EXTERNAL_DATA=1 DISCORD_SDK=0 LDFLAGS="-lc" -j$(sysctl -n hw.ncpu)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
