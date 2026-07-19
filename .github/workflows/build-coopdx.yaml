@@ -19,6 +19,26 @@ on:
         description: "构建 FreeBSD"
         type: boolean
         default: true
+      # BETTERCAMERA
+      bettercam:
+        description: "[全局] 启用 Better Camera"
+        type: boolean
+        default: true
+      # COOPNET_SDK
+      coopnet:
+        description: "[全局] 启用 Coopnet SDK (关闭则不能连 Coopnet)"
+        type: boolean
+        default: true
+      # HEADLESS
+      headless:
+        description: "[全局] 无头模式（没有图形界面，适合编译 Coopnet 上的无人服务器）
+        type: boolean
+        default: false
+      # EXT_OPTIONS_MENU
+      extmenu:
+        description: "[全局] 显示隐藏的扩展菜单"
+        type: boolean
+        default: false
 
 jobs:
   build-arm64-linux:
