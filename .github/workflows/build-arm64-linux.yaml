@@ -1,0 +1,39 @@
+name: 构建 SM64CoopDX arm64 Linux（不带DiscordLib）
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # - name: Decode Baserom from Secrets
+      #   run: |
+      #     echo "${{ secrets.BASE64_ROM }}" | base64 -d > baserom.us.z64
+
+      - name: Build in Native ARM64 Container
+        uses: uraimo/run-on-arch-action@v2
+        with:
+          arch: aarch64
+          distro: ubuntu22.04
+          githubToken: ${{ github.token }}
+          
+          dockerRunArgs: |
+            --volume "${{ github.workspace }}:/workspace"
+          
+          install: |
+            apt-get update
+            apt-get install -y build-essential git python3 libsdl2-dev libglew-dev libcurl4-openssl-dev zlib1g-dev bsdmainutils
+
+          run: |
+            cd /workspace
+            make DISCORDRPC=0 -j$(nproc)
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm64coopdx-arm64-linux
+          path: build/us_pc/
