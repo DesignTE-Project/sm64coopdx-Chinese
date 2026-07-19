@@ -7,6 +7,10 @@ on:
         description: "构建 ARM64 Linux"
         type: boolean
         default: true
+      riscv:
+        description: "构建 RISC-V Linux"
+        type: boolean
+        default: true
       freebsd:
         description: "构建 FreeBSD"
         type: boolean
@@ -72,7 +76,7 @@ jobs:
             mv tmp.c src/pc/mumble/mumble.c
             
             echo "开始编译。请坐和放宽"
-            gmake EXTERNAL_DATA=1 DISCORDRPC=0 -j$(sysctl -n hw.ncpu)
+            gmake EXTERNAL_DATA=1 DISCORD_SDK=0 -j$(sysctl -n hw.ncpu)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
