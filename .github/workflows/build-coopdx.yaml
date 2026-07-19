@@ -62,12 +62,13 @@ jobs:
           sync: rsync # 同步文件
           prepare: |
             pkg update
-            pkg install -y gmake sdl2 glew python3 git pkgconf
+            pkg install -y gmake sdl2 glew python3 git pkgconf gcc
             ln -sf /usr/local/bin/python3 /usr/local/bin/python
+            ln -sf /usr/local/bin/g++13 /usr/local/bin/g++
           run: |
             echo "开始编译。请坐和放宽"
             # 使用 c++。应该是什么g++找不到。我试试这个
-            gmake CC=cc CXX=c++ BETTERCAMERA=1 EXTERNAL_DATA=1 -j$(sysctl -n hw.ncpu)
+            gmake EXTERNAL_DATA=1 DISCORDRPC=0 -j$(sysctl -n hw.ncpu)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
