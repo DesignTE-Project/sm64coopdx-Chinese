@@ -2,10 +2,20 @@ name: 构建特殊平台的 sm64coopdx（不含 DiscordLib）
 
 on:
   workflow_dispatch: # 允许网页端手动点击触发
+    inputs:
+      arm64:
+        description: "构建 ARM64 Linux"
+        type: boolean
+        default: true
+      freebsd:
+        description: "构建 FreeBSD"
+        type: boolean
+        default: true
 
 jobs:
   build-arm64-linux:
     runs-on: ubuntu-24.04-arm
+    if: ${{ inputs.arm64 == true }}
     name: arm64 Linux（树莓派/Termux）
     
     steps:
@@ -38,6 +48,7 @@ jobs:
 
   build-freebsd:
     runs-on: ubuntu-22.04
+    if: ${{ inputs.freebsd == true }}
     name: FreeBSD 构建（BSD 大佬我哭了）
 
     steps:
