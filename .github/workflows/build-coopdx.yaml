@@ -6,6 +6,7 @@ on:
 jobs:
   build-arm64-linux:
     runs-on: ubuntu-24.04-arm
+    name: arm64 Linux（树莓派/Termux）
     
     steps:
       - name: Checkout Repository
@@ -32,5 +33,33 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: sm64coopdx-native-arm64-linux
+          name: sm64coopdx_arm64_linux
+          path: build/us_pc/
+
+  build-freebsd:
+    runs-on: ubuntu-22.04
+    name: FreeBSD 构建（BSD 大佬我哭了）
+
+    step:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: freebsd vm/build
+        uses:
+        with:
+        usesh: true
+        sync: rsync # 确保虚拟机与外部宿主机顺畅同步文件
+        # prepare 步骤：在虚拟机初始化时安装 FreeBSD 的编译依赖包
+        prepare: |
+          pkg update
+          pkg install -y gmake sdl2 glew python3 git pkgconf
+          ln -sf /usr/local/bin/python3 /usr/local/bin/python
+        run: |
+          echo "开始编译。请坐和放宽"
+          gmake BETTERCAMERA=1 EXTERNAL_DATA=1 -j$(sysctl -n hw.ncpu)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm64coopdx-freebsd-binaries
           path: build/us_pc/
