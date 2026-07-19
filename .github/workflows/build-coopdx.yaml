@@ -106,7 +106,13 @@ jobs:
             -w /workspace \
             ubuntu:24.04 \
             ./build_riscv.sh
-      
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm64coopdx_riscv64_linux
+          path: build/us_pc/
+
   build-freebsd:
     runs-on: ubuntu-22.04
     if: ${{ inputs.freebsd == true }}
@@ -133,7 +139,7 @@ jobs:
             mv tmp.c src/pc/mumble/mumble.c
             
             echo "开始编译。请坐和放宽"
-            gmake EXTERNAL_DATA=1 DISCORD_SDK=0 LDFLAGS="-lc" -j$(sysctl -n hw.ncpu)
+            gmake EXTERNAL_DATA=1 DISCORD_SDK=0 -j$(sysctl -n hw.ncpu)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
