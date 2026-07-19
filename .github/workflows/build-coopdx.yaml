@@ -31,7 +31,7 @@ on:
         default: true
       # HEADLESS
       headless:
-        description: "[全局] 无头模式（没有图形界面，适合编译 Coopnet 上的无人服务器）
+        description: "[全局] 无头模式（没有图形界面，适合编译 Coopnet 上的无人服务器）"
         type: boolean
         default: false
       # EXT_OPTIONS_MENU
