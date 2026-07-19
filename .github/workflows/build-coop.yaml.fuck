@@ -30,15 +30,14 @@ jobs:
             - name: Zip the game
               run: |
                 cd ./build/us_pc
-                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
-
-            - name: Upload artifact
+                zip -r sm64coopdx_Linux.zip dynos lang mods palettes libdisc
+            - name: ifact
               uses: actions/upload-artifact@v4
               with:
                 name: sm64coopdx-linux
                 path: ./build/us_pc/sm64coopdx_Linux.zip
     
-    build-steamos:
+    buil
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: ubuntu-22.04
         steps:
@@ -53,69 +52,27 @@ jobs:
             - name: Build the game
               run: make -j$(nproc) HANDHELD=1
 
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file hash_file.cpp
-                echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx)"
-            
-            - name: Zip the game
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_SteamOS.zip dynos lang mods palettes libdiscord_game_sdk.so sm64coopdx
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: sm64coopdx-steamos
-                path: ./build/us_pc/sm64coopdx_SteamOS.zip
+            - name: Generate hash_SteamOS.zip
 
     build-windows-opengl:
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
         runs-on: windows-latest
         defaults:
             run:
-                shell: msys2 {0}
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              uses: msys2/setup-msys2@v2
-              with:
-                msystem: mingw64
-                update: true
-                install: >
-                    unzip
-                    make
-                    git
-                    mingw-w64-i686-gcc
+                shell: mw-w64-i686-gcc
                     mingw-w64-x86_64-gcc
                     mingw-w64-i686-glew
                     mingw-w64-x86_64-glew
-                    mingw-w64-i686-SDL2
+64-i686-SDL2
                     mingw-w64-i686-SDL
-                    mingw-w64-x86_64-SDL2
-                    mingw-w64-x86_64-SDL
+                    mingw-w64-x86_64-Sw-w64-x86_64-SDL
                     python3
                     zip
 
             - name: Build the game
               run: make -j$(nproc)
 
-            - name: Generate hash
-              run: |
-                cd tools
-                g++ -std=c++17 -o hash_file.exe hash_file.cpp
-                echo "::notice ::$(./hash_file.exe ../build/us_pc/sm64coopdx.exe)"
-            
-            - name: Zip the game
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_Windows_OpenGL.zip dynos lang mods palettes coop.map discord_game_sdk.dll sm64coopdx.exe
-
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
+            - nams: actions/upload-artifact@v4
               with:
                 name: sm64coopdx-windows-opengl
                 path: ./build/us_pc/sm64coopdx_Windows_OpenGL.zip
@@ -126,32 +83,16 @@ jobs:
         defaults:
             run:
                 shell: msys2 {0}
-        steps:
-            - name: Checkout repository
+        stepame: Checkout repository
               uses: actions/checkout@v4
 
-            - name: Install dependencies
-              uses: msys2/setup-msys2@v2
-              with:
+            - name: Instal
                 msystem: mingw64
                 update: true
                 install: >
                     unzip
                     make
-                    git
-                    mingw-w64-i686-gcc
-                    mingw-w64-x86_64-gcc
-                    mingw-w64-i686-glew
-                    mingw-w64-x86_64-glew
-                    mingw-w64-i686-SDL2
-                    mingw-w64-i686-SDL
-                    mingw-w64-x86_64-SDL2
-                    mingw-w64-x86_64-SDL
-                    python3
-                    zip
-
-            - name: Build the game
-              run: make -j$(nproc) RENDER_API=D3D11 WINDOW_API=DXGI
+                    giI=D3D11 WINDOW_API=DXGI
 
             - name: Generate hash
               run: |
@@ -170,19 +111,7 @@ jobs:
                 name: sm64coopdx-windows-directx
                 path: ./build/us_pc/sm64coopdx_Windows_DirectX.zip
 
-    build-macos-arm:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: macos-latest
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              run: |
-                brew install make mingw-w64 sdl2 pkg-config glew glfw3 coreutils
-
-            - name: Build the game
-              run: |
+    build-    run: |
                 gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
 
             - name: Code sign the app (Ad-Hoc)
@@ -206,38 +135,9 @@ jobs:
                 name: sm64coopdx-macos-arm
                 path: ./build/us_pc/sm64coopdx_macOS_ARM.zip
 
-    build-macos-intel:
-        if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[build]') }}
-        runs-on: macos-15-intel
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-
-            - name: Install dependencies
-              run: |
-                brew install make mingw-w64 gcc@9 sdl2 pkg-config glew glfw3 coreutils
-
-            - name: Build the game
-              run: |
-                gmake OSX_BUILD=1 -j$(sysctl -n hw.ncpu)
-
-            - name: Code sign the app (Ad-Hoc)
-              run: |
-                codesign --force --deep --sign - ./build/us_pc/sm64coopdx.app
-
-            - name: Generate hash
-              run: |
-                cd tools
+    build       cd tools
                 g++ -std=c++17 -o hash_file hash_file.cpp
                 echo "::notice ::$(./hash_file ../build/us_pc/sm64coopdx.app/Contents/MacOS/sm64coopdx)"
 
-            - name: Zip the .app bundle
-              run: |
-                cd ./build/us_pc
-                zip -r sm64coopdx_macOS_Intel.zip sm64coopdx.app
-            
-            - name: Upload artifact
-              uses: actions/upload-artifact@v4
-              with:
                 name: sm64coopdx-macos-intel
                 path: ./build/us_pc/sm64coopdx_macOS_Intel.zip
