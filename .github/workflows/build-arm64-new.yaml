@@ -1,0 +1,42 @@
+name: 构建 sm64coopdx arm64（无discordLib）
+
+on:
+  workflow_dispatch: # 允许网页端手动点击触发
+
+jobs:
+  build-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # - name: Decode Baserom from Secrets
+      #   run: |
+      #     echo "${{ secrets.BASE64_ROM }}" | base64 -d > baserom.us.z64
+      
+      - name: Setup Multiarch and Install Toolchain
+        run: |
+          # 交叉编译依赖
+          sudo dpkg --add-architecture arm64
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+          # Others
+          sudo apt-get install -y build-essential python3 bsdmainutils pkg-config
+          
+          # arm64 native 依赖
+          sudo apt-get install -y libsdl2-dev:arm64 libglew-dev:arm64 libcurl4-openssl-dev:arm64 zlib1g-dev:arm64 libx11-dev:arm64
+
+      - name: Compile Host Tools Natively
+        run: |
+          make -C tools
+
+      - name: Cross-Compile Game to ARM64
+        run: |
+          export PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig
+          make CROSS_COMPILE=aarch64-linux-gnu- DISCORDRPC=0 -j$(nproc)
+
+      - name: artifact out
+        uses: actions/upload-artifact@v4
+        with:
+          name: sm64coopdx-arm64-linux-cross
+          path: build/us_pc/
