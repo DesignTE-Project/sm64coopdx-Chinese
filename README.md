@@ -1,5 +1,7 @@
 ![sm64coopdx Logo](textures/segment2/custom_coopdx_logo.rgba32.png)
 
+此项目为其他平台提供 sm64coopdx 汉化版编译流程，不提供安卓/Win/Mac/Linux。如果你需要这些主流平台的请加群。使用本项目流程编译的成品也不能进行任何方式的二传！
+
 sm64coopdx is an online multiplayer project for the Super Mario 64 PC port that synchronizes all entities and every level for multiple players. The project was started by the Coop Deluxe Team. The purpose is to actively maintain and improve, but also continue sm64ex-coop, created by djoslin0. More features, customization, and power to the Lua API allow modders and players to enjoy Super Mario 64 more than ever!
 
 Feel free to report bugs or contribute to the project. 
