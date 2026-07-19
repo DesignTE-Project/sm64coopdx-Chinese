@@ -30,7 +30,7 @@ jobs:
           # 没有任何交叉编译参数，核心全开 (-j$(nproc))，起飞！
           make DISCORDRPC=0 -j$(nproc)
 
-      - name: Upload Build Artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: sm64coopdx_arm64_linux
@@ -55,7 +55,8 @@ jobs:
             ln -sf /usr/local/bin/python3 /usr/local/bin/python
           run: |
             echo "开始编译。请坐和放宽"
-            gmake BETTERCAMERA=1 EXTERNAL_DATA=1 -j$(sysctl -n hw.ncpu)
+            # 使用 c++。应该是什么g++找不到。我试试这个
+            gmake CC=cc CXX=c++ BETTERCAMERA=1 EXTERNAL_DATA=1 -j$(sysctl -n hw.ncpu)
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
