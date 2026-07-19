@@ -123,7 +123,7 @@ jobs:
           sync: rsync # 同步文件
           prepare: |
             pkg update
-            pkg install -y gmake sdl2 glew python3 git pkgconf gcc libxrandr libxinerama libxi
+            pkg install -y gmake sdl2 glew python3 git pkgconf gcc x11/libXrandr x11/libXinerama x11/libXi x11/libX11 x11/xorgproto
             ln -sf /usr/local/bin/python3 /usr/local/bin/python
             ln -sf /usr/local/bin/g++14 /usr/local/bin/g++
           run: |
