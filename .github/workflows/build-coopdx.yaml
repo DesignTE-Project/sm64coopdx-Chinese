@@ -66,6 +66,11 @@ jobs:
             ln -sf /usr/local/bin/python3 /usr/local/bin/python
             ln -sf /usr/local/bin/g++14 /usr/local/bin/g++
           run: |
+            # 使用特殊的 sys/stat.h 看看能不能解决问题
+            echo '#include <sys/stat.h>' > tmp.c
+            cat src/pc/mumble/mumble.c >> tmp.c
+            mv tmp.c src/pc/mumble/mumble.c
+            
             echo "开始编译。请坐和放宽"
             gmake EXTERNAL_DATA=1 DISCORDRPC=0 -j$(sysctl -n hw.ncpu)
 
